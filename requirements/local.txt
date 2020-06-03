@@ -1,0 +1,4 @@
+-r ./base.txt
+
+isort==4.3.21
+flake8==3.8.2
