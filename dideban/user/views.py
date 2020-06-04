@@ -1,10 +1,9 @@
 from urllib.parse import urlparse, urlunparse
 
 from django.conf import settings
-from django.contrib.auth import (
-    REDIRECT_FIELD_NAME, login as auth_login,
-    logout as auth_logout,
-)
+from django.contrib.auth import REDIRECT_FIELD_NAME
+from django.contrib.auth import login as auth_login
+from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.sites.shortcuts import get_current_site
 from django.http import HttpResponseRedirect, QueryDict
@@ -46,8 +45,11 @@ class LoginView(SuccessURLAllowedHostsMixin, FormView):
             redirect_to = self.get_success_url()
             if redirect_to == self.request.path:
                 raise ValueError(
-                    "Redirection loop for authenticated user detected. Check that "
-                    "your LOGIN_REDIRECT_URL doesn't point to a login page."
+                    (
+                        "Redirection loop for authenticated user detected."
+                        " Check that "
+                        "your LOGIN_REDIRECT_URL doesn't point to login page."
+                    ),
                 )
             return HttpResponseRedirect(redirect_to)
         return super().dispatch(request, *args, **kwargs)
@@ -60,7 +62,7 @@ class LoginView(SuccessURLAllowedHostsMixin, FormView):
         """Return the user-originating redirect URL if it's safe."""
         redirect_to = self.request.POST.get(
             self.redirect_field_name,
-            self.request.GET.get(self.redirect_field_name, '')
+            self.request.GET.get(self.redirect_field_name, ''),
         )
         url_is_safe = url_has_allowed_host_and_scheme(
             url=redirect_to,
@@ -89,7 +91,7 @@ class LoginView(SuccessURLAllowedHostsMixin, FormView):
             self.redirect_field_name: self.get_redirect_url(),
             'site': current_site,
             'site_name': current_site.name,
-            **(self.extra_context or {})
+            **(self.extra_context or {}),
         })
         return context
 
@@ -128,7 +130,7 @@ class LogoutView(SuccessURLAllowedHostsMixin, TemplateView):
                 self.redirect_field_name in self.request.GET):
             next_page = self.request.POST.get(
                 self.redirect_field_name,
-                self.request.GET.get(self.redirect_field_name)
+                self.request.GET.get(self.redirect_field_name),
             )
             url_is_safe = url_has_allowed_host_and_scheme(
                 url=next_page,
@@ -148,7 +150,7 @@ class LogoutView(SuccessURLAllowedHostsMixin, TemplateView):
             'site': current_site,
             'site_name': current_site.name,
             'title': _('Logged out'),
-            **(self.extra_context or {})
+            **(self.extra_context or {}),
         })
         return context
 
@@ -162,7 +164,7 @@ def logout_then_login(request, login_url=None):
 
 
 def redirect_to_login(
-        next, login_url=None, redirect_field_name=REDIRECT_FIELD_NAME
+        next, login_url=None, redirect_field_name=REDIRECT_FIELD_NAME,
 ):
     """
     Redirect the user to the login page, passing the given 'next' page.
