@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'rest_framework',
+    'drf_yasg',
     'django.contrib.staticfiles',
     'dideban.user.apps.UserConfig'
 ]
