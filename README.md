@@ -1,3 +1,3 @@
 # dideban
 
-simple Attendance system writen in python and django.
+simple Attendance system written in python and django.
