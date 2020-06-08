@@ -1,3 +1,4 @@
+from django.contrib.auth import authenticate
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
@@ -6,7 +7,7 @@ from rest_framework.views import APIView
 
 from utils.common.drf_params import jwt_key
 
-from .serializers import UserProfileSerializer
+from .serializers import ChangePasswordSerializer, UserProfileSerializer
 
 
 class UserProfile(APIView):
@@ -33,3 +34,28 @@ class UserProfile(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
+
+
+class UserChangePassword(APIView):
+
+    permission_classes = [IsAuthenticated]
+    serializer_class = ChangePasswordSerializer
+
+    @swagger_auto_schema(
+        manual_parameters=[jwt_key],
+        request_body=ChangePasswordSerializer,
+        responses={205: None}
+    )
+    def put(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.data
+        if user := authenticate(
+            request,
+            username=request.user.username,
+            password=data["old_password"],
+        ):
+            user.set_password(data["new_password"])
+            user.save()
+            return Response(status=status.HTTP_205_RESET_CONTENT)
+        return Response(status=status.HTTP_406_NOT_ACCEPTABLE)

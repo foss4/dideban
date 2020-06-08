@@ -23,3 +23,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
     @staticmethod
     def get_date_joined(obj):
         return obj.date_joined.timestamp() if obj.date_joined else None
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True, max_length=50)
+    new_password = serializers.CharField(required=True, max_length=50)
