@@ -131,3 +131,5 @@ dmypy.json
 # abtin
 .idea/
 .vscode/
+
+gunicorn_conf.py
