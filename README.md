@@ -26,3 +26,14 @@ run project with:
 	python3 manage.py runserver
 
 for swagger open localhost:8000 in browser
+
+
+or to run with docker:
+
+    cp gunicorn_conf.py.sample gunicorn_conf.py
+    docker build . -t dideban_image
+    docker run -p 8000:8000 dideban_image
+    
+for more options see:
+
+    https://docs.docker.com/engine/reference/run/
