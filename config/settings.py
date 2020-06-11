@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_yasg',
     'django.contrib.staticfiles',
-    'dideban.user.apps.UserConfig'
+    'dideban.user.apps.UserConfig',
     'dideban.team.apps.TeamConfig'
 ]
 

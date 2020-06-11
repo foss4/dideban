@@ -9,6 +9,7 @@ from rest_framework import permissions
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('user/', include("dideban.user.api.v1.rest.urls"), name="user"),
+    path('team/', include("dideban.team.api.v1.rest.urls"), name="team"),
 ]
 
 if settings.DEBUG:
