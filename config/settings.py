@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'django.contrib.staticfiles',
     'dideban.user.apps.UserConfig'
+    'dideban.team.apps.TeamConfig'
 ]
 
 MIDDLEWARE = [
