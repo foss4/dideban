@@ -1,12 +1,13 @@
-from rest_framework.viewsets import ModelViewSet
-from .serializers import TeamSerialize
 from django.db.models.query import QuerySet
-from rest_framework.permissions import IsAdminUser
-from dideban.team.models import Team
-
 from django.utils.decorators import method_decorator
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework.permissions import IsAdminUser
+from rest_framework.viewsets import ModelViewSet
+
+from dideban.team.models import Team
 from utils.common.drf_params import jwt_key
+
+from .serializers import TeamSerialize
 
 
 @method_decorator(name='retrieve', decorator=swagger_auto_schema(

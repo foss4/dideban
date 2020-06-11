@@ -1,6 +1,8 @@
 from django.db import models
-from dideban.user.models import User
 from django.utils import timezone
+
+from dideban.user.models import User
+
 
 class Team(models.Model):
     title = models.CharField(max_length=100)
