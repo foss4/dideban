@@ -1,11 +1,10 @@
 from django.db import models
-from django.utils import timezone
 
 from dideban.user.models import User
+from utils.common.models import TimestampedModelMixin
 
 
-class Team(models.Model):
+class Team(TimestampedModelMixin):
     title = models.CharField(max_length=100)
     admin = models.ForeignKey(User, on_delete=models.CASCADE)
     address = models.TextField(blank=True, null=True)
-    create_date = models.DateTimeField(default=timezone.now)
