@@ -1,13 +1,22 @@
 from django.contrib.auth import authenticate
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.exceptions import NotFound
+from rest_framework.decorators import action
+from rest_framework.viewsets import GenericViewSet
 
 from utils.common.drf_params import jwt_key
 
-from .serializers import ChangePasswordSerializer, UserProfileSerializer
+from .serializers import (
+    ChangePasswordSerializer, UserProfileSerializer, ResetPasswordSerializer
+)
+from dideban.user.models import User
+from django.core.mail import send_mail
+from django.conf import settings
+from django.utils.translation import gettext_lazy as _
 
 
 class UserProfile(APIView):
@@ -59,3 +68,29 @@ class UserChangePassword(APIView):
             user.save()
             return Response(status=status.HTTP_205_RESET_CONTENT)
         return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+
+
+class UserForgetPassword(GenericViewSet):
+    serializer_class = None
+    permission_classes = AllowAny
+
+    def get_serializer_class(self):
+        if self.action == "reset":
+            return ResetPasswordSerializer
+
+    @action(methods=["POST"], detail=False)
+    def reset(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.data
+        if user := User.objects.filter(username=data["email"]):
+            user = user.first()
+            rand_password = User.objects.make_random_password()
+            send_mail(
+                subject=_("Reset Password"),
+                message=_("Your New Password Is = ") + rand_password,
+                from_email=settings.EMAIL_HOST_USER,
+                recipient_list=[data["email"]],
+            )
+            user.set_password(rand_password)
+        raise NotFound()

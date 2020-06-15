@@ -28,3 +28,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(required=True, max_length=50)
     new_password = serializers.CharField(required=True, max_length=50)
+
+
+class ResetPasswordSerializer(serializers.Serializer):
+    email = serializers.EmailField()
