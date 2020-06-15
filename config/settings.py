@@ -61,8 +61,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'dideban.urls'
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -78,8 +76,6 @@ TEMPLATES = [
         },
     },
 ]
-
-WSGI_APPLICATION = 'dideban.wsgi.application'
 
 
 # Database
