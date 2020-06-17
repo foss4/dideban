@@ -70,17 +70,16 @@ class UserChangePassword(APIView):
         return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
 
 
-class UserForgetPassword(GenericViewSet):
-    serializer_class = None
-    permission_classes = AllowAny
+class UserResetPassword(APIView):
+    serializer_class = ResetPasswordSerializer
+    permission_classes = [AllowAny]
 
-    def get_serializer_class(self):
-        if self.action == "reset":
-            return ResetPasswordSerializer
-
-    @action(methods=["POST"], detail=False)
-    def reset(self, request):
-        serializer = self.get_serializer(data=request.data)
+    @swagger_auto_schema(
+        request_body=ResetPasswordSerializer,
+        responses={205: None}
+    )
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = serializer.data
         if user := User.objects.filter(username=data["email"]):
